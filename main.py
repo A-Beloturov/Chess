@@ -34,9 +34,6 @@ class Figure:
         return f'X = {self.coordinate.x}, Y = {self.coordinate.y}'
 
 
-
-
-
 class Pawn(Figure):
     def valid_move(self, new_coord):
         x_new = new_coord.x - self.coordinate.x
@@ -51,11 +48,12 @@ class Pawn(Figure):
         else:
             return False
 
-Pawn1 = Pawn(Coordinate(2,2), Color.WHITE)
-Pawn1.move(Coordinate(3, 2))
 
-print(Pawn1)
-
-Pawn1.move(Coordinate(4, 2))
-
-print(Pawn1)
+# Pawn1 = Pawn(Coordinate(2,2), Color.WHITE)
+# Pawn1.move(Coordinate(3, 2))
+#
+# print(Pawn1)
+#
+# Pawn1.move(Coordinate(4, 2))
+#
+# print(Pawn1)
