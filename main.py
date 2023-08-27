@@ -16,6 +16,10 @@ class Color(Enum):
     WHITE = 1
 
 
+class Board:
+    def __init__(self):
+        self.piece = []
+
 class Figure:
     def __init__(self, coordinate: Coordinate, color: Color):
         self.coordinate = coordinate
