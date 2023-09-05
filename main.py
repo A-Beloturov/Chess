@@ -56,11 +56,15 @@ class Board:
 
 
 
+
 class Pawn(Figure):
     def __init__(self, coordinate: Coordinate, color: Color, board: Board):
         super().__init__(coordinate, color)
         self.board = board
-        self.board.add_figure(coordinate, self)
+        if not self.board.presence_figure(coordinate):
+            self.board.add_figure(coordinate, self)
+        else:
+            raise ValueError("На этой позиции уже есть фигура")
     def valid_move(self, new_coord):
         x_new = new_coord.x - self.coordinate.x
         y_new = new_coord.y - self.coordinate.y
@@ -80,10 +84,12 @@ class Pawn(Figure):
 
 board = Board()
 Pawn1 = Pawn(Coordinate(2,2), Color.WHITE, board)
-
+Pawn2 = Pawn(Coordinate(3,2), Color.WHITE, board)
 print(Pawn1)
+print(Pawn2)
 
 Pawn1.move(Coordinate(3, 2))
 
 print(Pawn1)
+print(Pawn2)
 print(board.dict_figures)
