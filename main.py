@@ -9,6 +9,12 @@ class Coordinate:
         self.x = x
         self.y = y
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __hash__(self):
+        return hash((self.x, self.y))
+
 
 
 class Color(Enum):
@@ -47,7 +53,7 @@ class Board:
 
     def del_figure(self, coord: Coordinate):
         if coord in self.dict_figures:
-            del self.dict_figures[coord]
+            self.dict_figures.pop(coord)
         else:
             raise ValueError("На этом месте нет фигуры")
 
@@ -88,6 +94,7 @@ Pawn2 = Pawn(Coordinate(3,2), Color.WHITE, board)
 print(Pawn1)
 print(Pawn2)
 
+Pawn2.move(Coordinate(4, 2))
 Pawn1.move(Coordinate(3, 2))
 
 print(Pawn1)
