@@ -43,7 +43,7 @@ class Figure:
 
 class Board:
     def __init__(self):
-        self.dict_figures = {}
+        self.dict_figures: dict = {}
 
     def add_figure(self, coord: Coordinate, figure: Figure):
         if coord in self.dict_figures:
@@ -76,13 +76,23 @@ class Pawn(Figure):
         y_new = new_coord.y - self.coordinate.y
 
         if self.color == Color.BLACK:
-            if x_new == 1 and y_new == 0 and not self.board.presence_figure(new_coord):
+            if x_new == 0 and y_new == -1 and not self.board.presence_figure(new_coord):
                 self.board.del_figure(self.coordinate)
                 self.board.add_figure(new_coord, self)
                 return True
-        elif self.color == Color.WHITE:
-            if x_new == 1 and y_new == 0 and not self.board.presence_figure(new_coord):
+            elif (x_new == 1 or x_new == -1) and y_new == -1 and self.board.presence_figure(new_coord):
                 self.board.del_figure(self.coordinate)
+                self.board.del_figure(new_coord)
+                self.board.add_figure(new_coord, self)
+                return True
+        elif self.color == Color.WHITE:
+            if x_new == 0 and y_new == 1 and not self.board.presence_figure(new_coord):
+                self.board.del_figure(self.coordinate)
+                self.board.add_figure(new_coord, self)
+                return True
+            elif (x_new == 1 or x_new == -1) and y_new == 1 and self.board.presence_figure(new_coord):
+                self.board.del_figure(self.coordinate)
+                self.board.del_figure(new_coord)
                 self.board.add_figure(new_coord, self)
                 return True
         else:
@@ -90,13 +100,15 @@ class Pawn(Figure):
 
 board = Board()
 Pawn1 = Pawn(Coordinate(2,2), Color.WHITE, board)
-Pawn2 = Pawn(Coordinate(3,2), Color.WHITE, board)
+Pawn2 = Pawn(Coordinate(3,3), Color.WHITE, board)
 print(Pawn1)
 print(Pawn2)
 
-Pawn2.move(Coordinate(4, 2))
-Pawn1.move(Coordinate(3, 2))
+# Pawn2.move(Coordinate(2, 4))
+Pawn1.move(Coordinate(3, 3))
+
 
 print(Pawn1)
 print(Pawn2)
+
 print(board.dict_figures)
