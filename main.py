@@ -9,6 +9,11 @@ class Coordinate:
         self.x = x
         self.y = y
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __hash__(self):
+        return hash((self.x, self.y))
 
 
 class Color(Enum):
@@ -34,26 +39,71 @@ class Figure:
         return f'X = {self.coordinate.x}, Y = {self.coordinate.y}'
 
 
+class Board:
+    def __init__(self):
+        self.dict_figures: dict = {}
+
+    def add_figure(self, coord: Coordinate, figure: Figure):
+        if coord in self.dict_figures:
+            raise ValueError("На этом месте уже есть фигура")
+        else:
+            self.dict_figures[coord] = figure
+
+    def del_figure(self, coord: Coordinate):
+        if coord in self.dict_figures:
+            self.dict_figures.pop(coord)
+        else:
+            raise ValueError("На этом месте нет фигуры")
+
+    def presence_figure(self, coord: Coordinate):
+        return coord in self.dict_figures
+
+
 class Pawn(Figure):
+    def __init__(self, coordinate: Coordinate, color: Color, board: Board):
+        super().__init__(coordinate, color)
+        self.board = board
+        if not self.board.presence_figure(coordinate):
+            self.board.add_figure(coordinate, self)
+        else:
+            raise ValueError("На этой позиции уже есть фигура")
+
     def valid_move(self, new_coord):
         x_new = new_coord.x - self.coordinate.x
         y_new = new_coord.y - self.coordinate.y
 
         if self.color == Color.BLACK:
-            if x_new == 1 and y_new == 0:
+            if x_new == 0 and y_new == -1 and not self.board.presence_figure(new_coord):
+                self.board.del_figure(self.coordinate)
+                self.board.add_figure(new_coord, self)
+                return True
+            elif (x_new == 1 or x_new == -1) and y_new == -1 and self.board.presence_figure(new_coord):
+                self.board.del_figure(self.coordinate)
+                self.board.del_figure(new_coord)
+                self.board.add_figure(new_coord, self)
                 return True
         elif self.color == Color.WHITE:
-            if x_new == 1 and y_new == 0:
+            if x_new == 0 and y_new == 1 and not self.board.presence_figure(new_coord):
+                self.board.del_figure(self.coordinate)
+                self.board.add_figure(new_coord, self)
                 return True
-        else:
-            return False
+            elif (x_new == 1 or x_new == -1) and y_new == 1 and self.board.presence_figure(new_coord):
+                self.board.del_figure(self.coordinate)
+                self.board.del_figure(new_coord)
+                self.board.add_figure(new_coord, self)
+                return True
+        return False
 
 
-# Pawn1 = Pawn(Coordinate(2,2), Color.WHITE)
-# Pawn1.move(Coordinate(3, 2))
-#
-# print(Pawn1)
-#
-# Pawn1.move(Coordinate(4, 2))
-#
-# print(Pawn1)
+if __name__ == "__main__":
+    board = Board()
+    Pawn1 = Pawn(Coordinate(2, 2), Color.WHITE, board)
+    Pawn2 = Pawn(Coordinate(3, 3), Color.WHITE, board)
+    print(Pawn1)
+    print(Pawn2)
+    print(board.dict_figures)
+    # Pawn2.move(Coordinate(2, 4))
+    Pawn1.move(Coordinate(3, 3))
+    print(Pawn1)
+    print(Pawn2)
+    print(board.dict_figures)
