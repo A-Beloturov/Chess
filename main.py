@@ -16,11 +16,9 @@ class Coordinate:
         return hash((self.x, self.y))
 
 
-
 class Color(Enum):
     BLACK = 0
     WHITE = 1
-
 
 
 class Figure:
@@ -61,8 +59,6 @@ class Board:
         return coord in self.dict_figures
 
 
-
-
 class Pawn(Figure):
     def __init__(self, coordinate: Coordinate, color: Color, board: Board):
         super().__init__(coordinate, color)
@@ -71,6 +67,7 @@ class Pawn(Figure):
             self.board.add_figure(coordinate, self)
         else:
             raise ValueError("На этой позиции уже есть фигура")
+
     def valid_move(self, new_coord):
         x_new = new_coord.x - self.coordinate.x
         y_new = new_coord.y - self.coordinate.y
@@ -95,20 +92,18 @@ class Pawn(Figure):
                 self.board.del_figure(new_coord)
                 self.board.add_figure(new_coord, self)
                 return True
-        else:
-            return False
-
-board = Board()
-Pawn1 = Pawn(Coordinate(2,2), Color.WHITE, board)
-Pawn2 = Pawn(Coordinate(3,3), Color.WHITE, board)
-print(Pawn1)
-print(Pawn2)
-
-# Pawn2.move(Coordinate(2, 4))
-Pawn1.move(Coordinate(3, 3))
+        return False
 
 
-print(Pawn1)
-print(Pawn2)
-
-print(board.dict_figures)
+if __name__ == "__main__":
+    board = Board()
+    Pawn1 = Pawn(Coordinate(2, 2), Color.WHITE, board)
+    Pawn2 = Pawn(Coordinate(3, 3), Color.WHITE, board)
+    print(Pawn1)
+    print(Pawn2)
+    print(board.dict_figures)
+    # Pawn2.move(Coordinate(2, 4))
+    Pawn1.move(Coordinate(3, 3))
+    print(Pawn1)
+    print(Pawn2)
+    print(board.dict_figures)
